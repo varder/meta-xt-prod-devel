@@ -2,6 +2,10 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/../../inc:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/../../recipes-domx:"
 
+IMAGE_INSTALL_append = " \
+    glmark2 \
+"
+
 python __anonymous () {
     product_name = d.getVar('XT_PRODUCT_NAME', True)
     folder_name = product_name.replace("-", "_")

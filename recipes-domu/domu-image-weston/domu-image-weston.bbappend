@@ -2,6 +2,10 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/../../inc:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/../../recipes-domx:"
 
+IMAGE_INSTALL_append = " \
+    glmark2 \
+"
+
 do_configure[depends] += "domd-image-weston:do_domd_install_machine_overrides"
 
 python __anonymous () {
