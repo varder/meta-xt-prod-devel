@@ -170,7 +170,6 @@ SRC_URI_append_h3ulcb-4x2g-kf-xt = " \
     file://r8a7795-h3ulcb-4x2g-kf-dom0.dts;subdir=git/arch/${ARCH}/boot/dts/renesas \
     file://r8a7795-h3ulcb-4x2g-kf-domd.dts;subdir=git/arch/${ARCH}/boot/dts/renesas \
     file://0001-r8a7795-6-65-.dtsi-Add-multichannel-audio-ranges-tha.patch \
-    file://ulcb.cfg \
 "
 
 KERNEL_DEVICETREE_h3ulcb-4x2g-kf-xt = " \
