@@ -40,6 +40,7 @@ KERNEL_DEVICETREE_salvator-x-h3-4x2g-xt = " \
     renesas/r8a7795-salvator-x-4x2g-dom0.dtb \
     renesas/r8a7795-salvator-x-4x2g-domd.dtb \
 "
+KERNEL_DEVICETREE_salvator-x-h3-4x2g-xt = ""
 
 ##############################################################################
 # Salvator-X H3 ES2.0
