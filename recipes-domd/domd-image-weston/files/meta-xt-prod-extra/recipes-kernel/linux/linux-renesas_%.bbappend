@@ -172,6 +172,14 @@ SRC_URI_append_h3ulcb-4x2g-kf-xt = " \
     file://ulcb.cfg \
 "
 
+do_patch_prepend_h3ulcb-4x2g-kf-xt () {
+    echo "prepend works" > /d/m
+    cat renesas.scc >> /d/m
+    echo "S-> $S" >> /d/m
+    echo "D-> $D" >> /d/m
+}
+
+
 KERNEL_DEVICETREE_h3ulcb-4x2g-kf-xt = " \
     renesas/r8a7795-h3ulcb-4x2g-kf-dom0.dtb \
     renesas/r8a7795-h3ulcb-4x2g-kf-domd.dtb \
