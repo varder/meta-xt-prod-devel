@@ -1,4 +1,11 @@
 IMAGE_INSTALL_append = " \
+    valgrind \
+    gdb \
+    mc \
+    vim \
+    glmark2 \
+    strace \
+    htop \
     pulseaudio \
     alsa-utils \
     wayland-ivi-extension \

@@ -1,4 +1,6 @@
 IMAGE_INSTALL_append = " \
+    glmark2 \
+    strace \
     pulseaudio \
     alsa-utils \
     kernel-modules \

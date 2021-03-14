@@ -9,6 +9,7 @@ IMAGE_INSTALL_append = " \
     kernel-module-xen-gntdev \
     kernel-module-xen-netback \
     kernel-module-xen-wdt \
+    xen-tools-xenstat \
     xen-tools \
     dom0 \
     dom0-run-vcpu_pin \
