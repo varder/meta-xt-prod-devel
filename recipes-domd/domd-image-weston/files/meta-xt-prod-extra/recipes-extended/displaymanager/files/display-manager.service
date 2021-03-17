@@ -1,10 +1,10 @@
 [Unit]
 Description=EPAM Display Manager
-Requires=dbus.service weston@root.service
-After=dbus.service weston@root.service
+Requires=dbus.service weston@%u.service
+After=dbus.service weston@%u.service
 
 [Service]
-Environment="XDG_RUNTIME_DIR=/run/user/0"
+Environment="XDG_RUNTIME_DIR=/run/user/%U"
 Type=dbus
 BusName=com.epam.DisplayManager
 ExecStartPre=/usr/bin/weston-info
