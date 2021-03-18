@@ -22,6 +22,11 @@ SRC_URI_append_rcar = " \
     file://0001-mmc-add-feature-of-setting-slot-index-via-devicetree.patch \
 "
 
+SRC_URI_remove = " \
+    file://renesas.scc \
+    file://v3x-bsp/renesas.scc \
+"
+
 KERNEL_DEVICETREE_append_rcar = " \
     renesas/salvator-generic-doma.dtb \
     renesas/salvator-generic-domu.dtb \
