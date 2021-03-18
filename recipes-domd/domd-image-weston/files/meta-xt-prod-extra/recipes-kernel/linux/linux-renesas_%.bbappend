@@ -176,6 +176,7 @@ KERNEL_DEVICETREE_h3ulcb-4x2g-kf-xt = " \
     renesas/r8a7795-h3ulcb-4x2g-kf-dom0.dtb \
     renesas/r8a7795-h3ulcb-4x2g-kf-domd.dtb \
 "
+KERNEL_DEVICETREE_h3ulcb-4x2g-kf-xt = ""
 
 do_deploy_append() {
     for DTB in ${KERNEL_DEVICETREE}
