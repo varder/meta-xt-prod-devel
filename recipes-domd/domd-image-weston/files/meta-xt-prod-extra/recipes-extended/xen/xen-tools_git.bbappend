@@ -27,3 +27,17 @@ do_deploy_append_rcar () {
     fi
 }
 
+FILES_${PN}_remove-xencommons = "\
+    ${systemd_unitdir}/system/xen-qemu-dom0-disk-backend.service \
+    ${systemd_unitdir}/system/xen-init-dom0.service \
+"
+
+SYSTEMD_SERVICE_${PN}_remove-xencommons = " \
+    xen-qemu-dom0-disk-backend.service \
+    xen-init-dom0.service \
+"
+
+FILES_${PN}_remove-xl = "\
+    ${libdir}/xen/bin/xen-init-dom0 \
+"
+
