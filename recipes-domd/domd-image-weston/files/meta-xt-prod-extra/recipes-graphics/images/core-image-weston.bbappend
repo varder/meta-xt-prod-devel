@@ -1,4 +1,10 @@
 IMAGE_INSTALL_append = " \
+    valgrind \
+    gdb \
+    mc \
+    vim \
+    strace \
+    htop \
     glmark2 \
     pulseaudio \
     alsa-utils \
