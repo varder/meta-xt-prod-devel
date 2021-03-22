@@ -143,6 +143,8 @@ configure_versions_rcar() {
     # to be hypervisor's one
     base_update_conf_value ${local_conf} SERIAL_CONSOLES "115200;hvc0"
 
+    # disable virtual console
+    base_update_conf_value ${local_conf} SYSTEMD_SERVICE_${PN}_remove "getty@tty1.service"
 
     # set default timezone to Las Vegas
     base_update_conf_value ${local_conf} DEFAULT_TIMEZONE "US/Pacific"
