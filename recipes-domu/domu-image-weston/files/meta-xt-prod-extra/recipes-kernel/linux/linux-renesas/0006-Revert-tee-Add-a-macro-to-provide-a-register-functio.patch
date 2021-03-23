@@ -1,0 +1,47 @@
+From f6a09c9126186b5ca2ed7ba3b8dfd2ec33cf41d8 Mon Sep 17 00:00:00 2001
+From: Valerii Chubar <valerii_chubar@epam.com>
+Date: Tue, 23 Mar 2021 19:07:28 +0200
+Subject: [PATCH] Revert "tee: Add a macro to provide a register function to a
+ kernel space"
+
+This reverts commit 2c124a612d80048563a3c6b9da22d84be2b75cae.
+---
+ include/linux/tee_drv.h | 15 ---------------
+ 1 file changed, 15 deletions(-)
+
+diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+index a11538d2a323..7a03f68fb982 100644
+--- a/include/linux/tee_drv.h
++++ b/include/linux/tee_drv.h
+@@ -1,17 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Copyright (c) 2015-2016, Linaro Limited
+- * Copyright (c) 2018, Renesas Electronics Corporation
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+  */
+ 
+ #ifndef __TEE_DRV_H
+@@ -38,10 +27,6 @@
+ #define TEE_SHM_USER_MAPPED	BIT(4)  /* Memory mapped in user space */
+ #define TEE_SHM_POOL		BIT(5)  /* Memory allocated from pool */
+ 
+-/* Define functions corresponding to TEEC_RegisterSharedMemory */
+-/* in kernel space with macros */
+-#define tee_shm_reg tee_shm_alloc
+-
+ struct device;
+ struct tee_device;
+ struct tee_shm;
+-- 
+2.17.1
+
