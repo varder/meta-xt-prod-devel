@@ -18,7 +18,7 @@ XT_BB_LOCAL_CONF_FILE = "meta-xt-prod-extra/doc/local.conf.domu-image-android"
 # N.B. xt_shared_env.inc MUST be listed AFTER meta-xt-prod-extra
 XT_QUIRK_UNPACK_SRC_URI += "\
     file://meta-xt-prod-extra;subdir=repo \
-    file://xt_shared_env.inc;subdir=repo/meta-xt-prod-extra/inc \
+    file://xt_shared_env.inc;subdir=repo/meta-xt-prod-domx/inc \
 "
 
 # these layers will be added to bblayers.conf on do_configure

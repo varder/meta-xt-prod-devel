@@ -38,7 +38,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/../../inc:"
 # N.B. xt_shared_env.inc MUST be listed AFTER meta-xt-prod-extra
 XT_QUIRK_UNPACK_SRC_URI += "\
     file://meta-xt-prod-extra;subdir=repo \
-    file://xt_shared_env.inc;subdir=repo/meta-xt-prod-extra/inc \
+    file://xt_shared_env.inc;subdir=repo/meta-xt-prod-domx/inc \
 "
 
 XT_QUIRK_BB_ADD_LAYER += " \
