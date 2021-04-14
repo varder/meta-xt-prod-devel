@@ -21,8 +21,7 @@ SRC_URI = " \
 
 XT_QUIRK_UNPACK_SRC_URI += " \
     file://meta-xt-prod-extra;subdir=repo \
-    file://xt_shared_env.inc;subdir=repo/meta-xt-prod-extra/inc \
-    file://xen-version.inc;subdir=repo/meta-xt-prod-extra/recipes-extended/xen \
+    file://meta-xt-prod-domx;subdir=repo \
 "
 
 XT_QUIRK_BB_ADD_LAYER += " \
