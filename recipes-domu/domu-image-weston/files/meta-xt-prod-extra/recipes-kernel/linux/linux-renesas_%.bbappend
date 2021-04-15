@@ -11,6 +11,7 @@ LINUX_VERSION = "5.4.72"
 KBUILD_DEFCONFIG_rcar = ""
 SRC_URI_append = " \
     file://defconfig \
+    file://0001-Revert-drm-xen-front-flush-buffer-during-set-config-.patch \
 	file://0001-Revert-tee-optee-remove-calling-optee_enumerate_devi.patch \
 	file://0002-Revert-tee-optee-add-SMC-of-START_DLOG_OUTPUT-to-rca.patch \
 	file://0003-Revert-tee-optee-Modify-duration-of-spinlock-for-lis.patch \
