@@ -1,4 +1,13 @@
+
+EXTRA_IMAGE_FEATURES += "tools-profile"
+
 IMAGE_INSTALL_append = " \
+    oprofile \
+    perf \
+    htop \
+    strace \
+    mc \ 
+    vim \
     glmark2 \
     pulseaudio \
     alsa-utils \

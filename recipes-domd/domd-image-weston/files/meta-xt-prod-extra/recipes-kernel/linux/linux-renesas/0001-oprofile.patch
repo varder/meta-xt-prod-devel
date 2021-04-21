@@ -1,0 +1,238 @@
+From 8f4e7151bda436a0c43abfede15f61aec0ddabb1 Mon Sep 17 00:00:00 2001
+From: Valerii Chubar <valerii_chubar@epam.com>
+Date: Tue, 20 Apr 2021 12:04:56 +0000
+Subject: [PATCH] oprofile
+
+---
+ arch/arm64/Kconfig                  |   1 +
+ arch/arm64/Makefile                 |   2 +
+ arch/arm64/include/asm/perf_event.h |   2 +
+ arch/arm64/include/asm/stacktrace.h |   2 +
+ arch/arm64/kernel/perf_event.c      |  10 +++
+ arch/arm64/kernel/stacktrace.c      |   1 +
+ arch/arm64/oprofile/Makefile        |  13 ++++
+ arch/arm64/oprofile/common.c        | 111 ++++++++++++++++++++++++++++
+ 8 files changed, 142 insertions(+)
+ create mode 100644 arch/arm64/oprofile/Makefile
+ create mode 100644 arch/arm64/oprofile/common.c
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index a0bc9bbb92f3..c9e3d710c89d 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config ARM64
+ 	def_bool y
++    select HAVE_OPROFILE if (HAVE_PERF_EVENTS)
+ 	select ACPI_CCA_REQUIRED if ACPI
+ 	select ACPI_GENERIC_GSI if ACPI
+ 	select ACPI_GTDT if ACPI
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 96abe558aea8..7a27e1db292a 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -62,6 +62,8 @@ KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst) $(compat_vdso)
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+ KBUILD_AFLAGS	+= $(call cc-option,-mabi=lp64)
+ 
++drivers-$(CONFIG_OPROFILE)      += arch/arm64/oprofile/
++
+ ifeq ($(CONFIG_STACKPROTECTOR_PER_TASK),y)
+ prepare: stack_protector_prepare
+ stack_protector_prepare: prepare0
+diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+index 2bdbc79bbd01..cf3f54f50974 100644
+--- a/arch/arm64/include/asm/perf_event.h
++++ b/arch/arm64/include/asm/perf_event.h
+@@ -166,6 +166,8 @@
+ #define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_WB_CLEAN			0xA7
+ #define ARMV8_IMPDEF_PERFCTR_L3D_CACHE_INVAL			0xA8
+ 
++#define ARMV8_PMUV3_PERFCTR_CLOCK_CYCLES			    0XFF
++
+ /*
+  * Per-CPU PMCR: config reg
+  */
+diff --git a/arch/arm64/include/asm/stacktrace.h b/arch/arm64/include/asm/stacktrace.h
+index 4d9b1f48dc39..2842d0ed7aad 100644
+--- a/arch/arm64/include/asm/stacktrace.h
++++ b/arch/arm64/include/asm/stacktrace.h
+@@ -55,6 +55,8 @@ struct stackframe {
+ 	unsigned long pc;
+ 	DECLARE_BITMAP(stacks_done, __NR_STACK_TYPES);
+ 	unsigned long prev_fp;
++    unsigned long lr;
++    unsigned long sp;
+ 	enum stack_type prev_type;
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	int graph;
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 19128d994ee9..e799959b2d36 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -1228,3 +1228,13 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 	userpg->time_shift = (u16)shift;
+ 	userpg->time_offset = -now;
+ }
++
++//const char *perf_pmu_name(void)
++//{
++//	if (!cpu_pmu)
++//	return NULL;
++//
++//	return cpu_pmu->name;
++//}
++//EXPORT_SYMBOL_GPL(perf_pmu_name);
++
+diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+index a336cb124320..e8fc55975a8f 100644
+--- a/arch/arm64/kernel/stacktrace.c
++++ b/arch/arm64/kernel/stacktrace.c
+@@ -128,6 +128,7 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
+ 	}
+ }
+ NOKPROBE_SYMBOL(walk_stackframe);
++EXPORT_SYMBOL_GPL(walk_stackframe);
+ 
+ #ifdef CONFIG_STACKTRACE
+ struct stack_trace_data {
+diff --git a/arch/arm64/oprofile/Makefile b/arch/arm64/oprofile/Makefile
+new file mode 100644
+index 000000000000..b2215c61cdf0
+--- /dev/null
++++ b/arch/arm64/oprofile/Makefile
+@@ -0,0 +1,13 @@
++obj-$(CONFIG_OPROFILE) += oprofile.o
++
++DRIVER_OBJS = $(addprefix ../../../drivers/oprofile/, \
++		oprof.o cpu_buffer.o buffer_sync.o \
++		event_buffer.o oprofile_files.o \
++		oprofilefs.o oprofile_stats.o \
++		timer_int.o )
++
++ifeq ($(CONFIG_HW_PERF_EVENTS),y)
++DRIVER_OBJS += $(addprefix ../../../drivers/oprofile/, oprofile_perf.o)
++endif
++
++oprofile-y				:= $(DRIVER_OBJS) common.o
+diff --git a/arch/arm64/oprofile/common.c b/arch/arm64/oprofile/common.c
+new file mode 100644
+index 000000000000..837aa8eeb646
+--- /dev/null
++++ b/arch/arm64/oprofile/common.c
+@@ -0,0 +1,111 @@
++/**
++ * @file common.c
++ *
++ * @remark Copyright 2004 Oprofile Authors
++ * @remark Copyright 2010 ARM Ltd.
++ * @remark Read the file COPYING
++ *
++ * @author Zwane Mwaikambo
++ * @author Will Deacon [move to perf]
++ */
++
++#include <linux/cpumask.h>
++#include <linux/init.h>
++#include <linux/mutex.h>
++#include <linux/oprofile.h>
++#include <linux/perf_event.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <asm/stacktrace.h>
++#include <linux/uaccess.h>
++
++#include <asm/perf_event.h>
++#include <asm/ptrace.h>
++
++#ifdef CONFIG_HW_PERF_EVENTS
++
++char *op_name_from_perf_id(void)
++{
++	return perf_pmu_name();
++}
++#endif
++
++static int report_trace(struct stackframe *frame, void *d)
++{
++	unsigned int *depth = d;
++
++	if (*depth) {
++		oprofile_add_trace(frame->pc);
++		(*depth)--;
++	}
++
++	return *depth == 0;
++}
++
++/*
++ * The registers we're interested in are at the end of the variable
++ * length saved register structure. The fp points at the end of this
++ * structure so the address of this struct is:
++ * (struct frame_tail *)(xxx->fp)-1
++ */
++struct frame_tail {
++	struct frame_tail *fp;
++	unsigned long sp;
++	unsigned long lr;
++} __attribute__((packed));
++
++static struct frame_tail *user_backtrace(struct frame_tail *tail)
++{
++	struct frame_tail buftail[2];
++
++	/* Also check accessibility of one struct frame_tail beyond */
++	if (!access_ok(tail, sizeof(buftail)))
++		return NULL;
++	if (__copy_from_user_inatomic(buftail, tail, sizeof(buftail)))
++		return NULL;
++
++	oprofile_add_trace(buftail[0].lr);
++
++	/* frame pointers should strictly progress back up the stack
++	 * (towards higher addresses) */
++	if (tail + 1 >= buftail[0].fp)
++		return NULL;
++
++	return buftail[0].fp-1;
++}
++
++static void arm_backtrace(struct pt_regs * const regs, unsigned int depth)
++{
++	struct frame_tail *tail = ((struct frame_tail *) regs->regs[29]) - 1;
++
++	if (!user_mode(regs)) {
++		struct stackframe frame;
++		frame.fp = regs->regs[29];
++		frame.sp = regs->sp;
++		frame.lr = regs->regs[30];
++		frame.pc = regs->pc;
++		walk_stackframe(current, &frame, report_trace, &depth);
++		
++		// walk_stackframe(&frame, report_trace, &depth);
++		// extern void walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
++			    // int (*fn)(struct stackframe *, void *), void *data);
++
++		return;
++	}
++
++	while (depth-- && tail && !((unsigned long) tail & 3))
++		tail = user_backtrace(tail);
++}
++
++int __init oprofile_arch_init(struct oprofile_operations *ops)
++{
++	/* provide backtrace support also in timer mode: */
++	ops->backtrace		= arm_backtrace;
++
++	return oprofile_perf_init(ops);
++}
++
++void oprofile_arch_exit(void)
++{
++	oprofile_perf_exit();
++}
+-- 
+2.17.1
+

@@ -10,6 +10,7 @@ LINUX_VERSION = "5.4.72"
 
 KBUILD_DEFCONFIG_rcar = ""
 SRC_URI_append = " \
+    file://0001-oprofile.patch \
     file://defconfig \
     file://0001-Revert-drm-xen-front-flush-buffer-during-set-config-.patch \
 	file://0001-Revert-tee-optee-remove-calling-optee_enumerate_devi.patch \

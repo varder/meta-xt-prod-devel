@@ -16,6 +16,7 @@ SRC_URI_append = " \
 KERNEL_FEATURES_remove = "cfg/virtio.scc"
 
 SRC_URI_append_rcar = " \
+    file://0001-oprofile.patch \
     file://salvator-generic-doma.dts;subdir=git/arch/${ARCH}/boot/dts/renesas \
     file://salvator-generic-domu.dts;subdir=git/arch/${ARCH}/boot/dts/renesas \
     file://xen-chosen.dtsi;subdir=git/arch/${ARCH}/boot/dts/renesas \
