@@ -1,4 +1,8 @@
+
+EXTRA_IMAGE_FEATURES += "tools-profile"
+
 IMAGE_INSTALL_append = " \
+    perf \
     glmark2 \
     pulseaudio \
     alsa-utils \
