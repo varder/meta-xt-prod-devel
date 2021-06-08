@@ -33,3 +33,31 @@
 
 	status = "okay";
 };
+
+&hdmi1 {
+	status = "okay";
+
+	ports {
+		port@1 {
+			reg = <1>;
+			rcar_dw_hdmi1_out: endpoint {
+				remote-endpoint = <&hdmi1_con>;
+			};
+		};
+	};
+};
+
+/ {
+	hdmi1-out {
+		compatible = "hdmi-connector";
+        // TODO Do we need a label for hdmi0?
+		label = "HDMI1 OUT";
+		type = "a";
+
+		port {
+			hdmi1_con: endpoint {
+	            remote-endpoint = <&rcar_dw_hdmi1_out>;
+			};
+		};
+	};
+};
