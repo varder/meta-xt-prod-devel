@@ -5,6 +5,18 @@
  * Copyright (C) 2017-2021 Renesas Electronics Corp.
  */
 
+&can0 {
+	pinctrl-0 = <&can0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&can1 {
+	pinctrl-0 = <&can1_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
 &ehci0 {
 	dr_mode = "otg";
 	status = "okay";
@@ -21,6 +33,16 @@
 };
 
 &pfc {
+	can0_pins: can0 {
+		groups = "can0_data_a";
+		function = "can0";
+	};
+
+	can1_pins: can1 {
+		groups = "can1_data";
+		function = "can1";
+	};
+
 	usb0_pins: usb0 {
 		groups = "usb0";
 		function = "usb0";
